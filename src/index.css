@@ -1,0 +1,19 @@
+@import "tailwindcss";
+body {
+  background-color: var(--bg-color);
+  padding: 0;
+  overflow-x: hidden;
+}
+* {
+  user-select: none;
+  box-sizing: border-box;
+}
+:root {
+  --bg-color: black;
+}
+.movie-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
