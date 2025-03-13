@@ -19,16 +19,16 @@ const Banner = () => {
   }, []);
   return (
     <div
-      className="banner relative z-0 h-screen bg-[url(../assets/banner.jpg)] bg-cover bg-center bg-no-repeat object-cover py-4 max-lg:h-full"
+      className="banner relative z-0 h-screen bg-[url(../assets/banner.jpg)] bg-cover bg-center bg-no-repeat object-cover py-4 max-lg:h-full max-lg:pb-20"
       style={{
         backgroundImage: `url(https://image.tmdb.org/t/p/original/${movieList.backdrop_path})`,
       }}
     >
       <div className="container flex w-screen flex-col px-2 text-white sm:px-4 md:px-5 lg:px-8 xl:px-10">
-        <h1 className="mt-50 text-3xl font-bold text-nowrap uppercase drop-shadow-lg sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl">
+        <h1 className="mt-50 text-3xl font-bold text-nowrap uppercase drop-shadow-lg max-lg:text-center max-lg:text-wrap sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl">
           {movieList.title}
         </h1>
-        <p className="mt-4 w-[50%] text-wrap shadow-2xl drop-shadow-lg select-none">
+        <p className="mt-4 w-[50%] shadow-2xl drop-shadow-lg select-none max-lg:w-full max-sm:mx-auto max-sm:text-center max-sm:text-wrap">
           {movieList.overview}
         </p>
         <div className="flex items-center justify-between drop-shadow-xs">

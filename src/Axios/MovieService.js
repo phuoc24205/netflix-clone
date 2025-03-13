@@ -22,6 +22,13 @@ export async function getGenres() {
     return [];
   }
 }
+// Hàm lấy tên thể loại theo ID
+export async function getGenreNameById(genreId) {
+  const genres = await getGenres();
+  console.log(genres);
+  const genre = genres.find((g) => g.id === genreId);
+  return genre ? genre.name : "Không xác định";
+}
 // Hàm lấy danh sách phim theo thể loại
 export async function getMoviesByGenre(genreId) {
   try {
@@ -52,19 +59,11 @@ export async function getMoviesByKeyWord(keyword) {
     return [];
   }
 }
-export async function fetchAllMoviesByGenres() {
+export async function fetchAllMoviesByGenres(genreId) {
   try {
-    const genres = await getGenres(); // Lấy danh sách thể loại
-    const allMovies = {};
-
-    for (const genre of genres) {
-      const movies = await getMoviesByGenre(genre.id); // Lấy toàn bộ phim cho thể loại đó
-      allMovies[genre.name] = movies; // Lưu phim theo thể loại
-    }
-
-    return allMovies;
+    return await getMoviesByGenre(genreId);
   } catch (error) {
     console.error("Lỗi khi lấy tất cả phim theo thể loại:", error);
-    return {};
+    return [];
   }
 }

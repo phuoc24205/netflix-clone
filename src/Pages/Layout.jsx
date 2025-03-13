@@ -1,16 +1,17 @@
 import React from "react";
-import Navbar from "../Components/Navbar";
 import ModalMovie from "../Components/ModalMovie";
+import ModalMain from "../Components/ModalMain";
 import { MovieProvider } from "../Context/MovieContext";
 
 const Layout = ({ children }) => {
   return (
-    <div className="layout">
-      <MovieProvider>
+    <MovieProvider>
+      <div className="mx-auto w-full max-w-[100vw]">
         {children}
         <ModalMovie />
-      </MovieProvider>
-    </div>
+        <ModalMain></ModalMain>
+      </div>
+    </MovieProvider>
   );
 };
 

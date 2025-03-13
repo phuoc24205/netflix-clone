@@ -20,9 +20,9 @@ const Navbar = () => {
   console.log("navbar rerender");
   return (
     <>
-      <div className="fixed top-0 z-10 mx-auto w-full">
+      <div className="fixed z-50 mx-auto w-full">
         <nav
-          className={`${!isAtTop ? "bg-[#0D0D0D]" : ""} absolute top-0 w-full transition duration-800 ease-in-out`}
+          className={`${!isAtTop ? "bg-[#0D0D0D]" : ""} absolute w-full transition duration-800 ease-in-out`}
         >
           <div className="mx-auto flex w-full items-center justify-between px-4 py-4 text-xs text-white sm:text-sm md:text-base lg:text-lg xl:text-lg">
             <div className="navbar-left relative z-0 flex items-center gap-10">
@@ -33,10 +33,10 @@ const Navbar = () => {
                   alt=""
                 />
               </div>
-              <div className="z-100 xl:hidden">
+              <div className="relative z-50 translate-z-0 transform min-md:hidden">
                 <DropdownNav title="Duyệt tìm"></DropdownNav>
               </div>
-              <ul className="relative z-0 flex flex-nowrap gap-3 max-[1200px]:hidden">
+              <ul className="relative z-2 flex flex-nowrap gap-3 whitespace-nowrap max-lg:text-sm max-md:hidden">
                 <li className="hover:cursor-pointer hover:text-gray-300">
                   <Link to="/">Trang chủ</Link>
                 </li>
@@ -53,12 +53,9 @@ const Navbar = () => {
             </div>
             <div className="navbar-right relative z-20 flex items-center gap-3">
               <Search></Search>
-              <button className="bg-red-600 p-2 hover:cursor-pointer">
-                Đăng nhập
-              </button>
             </div>
           </div>
-          <div className="mx-auto pb-4 sm:px-4 md:px-5 lg:px-8 xl:px-5">
+          <div className="relative z-0 mx-auto translate-z-0 transform pb-4 sm:px-4 md:px-5 lg:px-8 xl:px-5">
             <CategoryDropdown></CategoryDropdown>
           </div>
         </nav>

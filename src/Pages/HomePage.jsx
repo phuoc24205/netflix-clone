@@ -1,25 +1,30 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "../Components/Navbar";
 import Banner from "../Components/Banner";
 import Row from "../Components/Row";
-import { fetchAllMoviesByGenres } from "../Axios/MovieService";
-import { MovieProvider, useMovie } from "../Context/MovieContext";
-import ModalMovie from "../Components/ModalMovie";
-import ResultMovie from "../Components/ResultMovie";
+
 import useFetchMoviesByGenres from "../CustomHook/useFetchMoviesByGenre";
 import Layout from "./Layout";
 import Footer from "../Components/Footer";
+import RowLoading from "../Components/RowLoading";
 const Home = () => {
-  const moviesByGenre = useFetchMoviesByGenres();
+  const { moviesByGenre, isLoading } = useFetchMoviesByGenres();
   const renderMovieContent = () => {
     return Object.keys(moviesByGenre).map((genre) => (
-      <Row key={genre} title={genre.toString()} movies={moviesByGenre[genre]} />
+      <Row
+        isLoading={isLoading}
+        key={genre}
+        title={genre.toString()}
+        movies={moviesByGenre[genre]}
+      />
     ));
   };
   return (
     <Layout>
       <Banner />
       {renderMovieContent()}
+      <div id="loading" style={{ height: "50px", textAlign: "center" }}>
+        {isLoading && "Skeleton loading"}
+      </div>
       <Footer></Footer>
     </Layout>
   );

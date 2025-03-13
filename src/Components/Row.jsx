@@ -2,23 +2,28 @@ import React, { useRef, useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 import MovieCard from "./MovieCard";
-import ModalMovie from "./ModalMovie";
-import { useMovie } from "../Context/MovieContext";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 
-const Row = ({ title, movies }) => {
+const Row = ({ title, movies, isLoading, fetchMoreMovies }) => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
+  const [visibleMovies, setVisibleMovies] = useState([]);
 
   useEffect(() => {
-    console.log(movies);
+    setVisibleMovies(movies.slice(0, 10)); // Lấy 10 phim đầu tiên
   }, [movies]);
 
-  const handleOverlayMouseEnter = (event) => {
-    event.stopPropagation(); // Ngừng sự kiện MouseEnter
+  // Xử lý khi Swiper đến cuối cùng -> Tải thêm phim
+  const handleReachEnd = () => {
+    if (visibleMovies.length < movies.length) {
+      setVisibleMovies((prev) => [
+        ...prev,
+        ...movies.slice(prev.length, prev.length + 10),
+      ]);
+    }
   };
 
   return (
@@ -26,60 +31,40 @@ const Row = ({ title, movies }) => {
       <h2 className="mb-2 font-bold">{title}</h2>
       <Swiper
         modules={[Navigation, Pagination, Scrollbar, A11y]}
-        slidesPerView={3}
-        slidesPerGroup={3}
+        slidesPerView={5}
+        slidesPerGroup={5}
         spaceBetween={10}
         navigation={{
           prevEl: prevRef.current,
           nextEl: nextRef.current,
         }}
         breakpoints={{
-          // khi màn hình >= 640px
-          640: {
-            slidesPerView: 3,
-            slidesPerGroup: 3,
-            spaceBetween: 10,
-          },
-          // khi màn hình >= 768px
-          768: {
-            slidesPerView: 4,
-            slidesPerGroup: 4,
-            spaceBetween: 10,
-          },
-          // khi màn hình >= 1024px
-          1024: {
-            slidesPerView: 5,
-            slidesPerGroup: 5,
-            spaceBetween: 10,
-          },
+          640: { slidesPerView: 3, slidesPerGroup: 3, spaceBetween: 10 },
+          768: { slidesPerView: 4, slidesPerGroup: 4, spaceBetween: 10 },
+          1024: { slidesPerView: 5, slidesPerGroup: 5, spaceBetween: 10 },
         }}
         pagination={{ clickable: true }}
         loop={false}
+        onReachEnd={handleReachEnd} // Gọi hàm khi chạm slide cuối
       >
-        {movies.map((movie) => (
+        {visibleMovies.map((movie) => (
           <SwiperSlide key={movie.id} className="custom-slide">
             <MovieCard
-              key={movie.id}
+              isLoading={isLoading}
               movie={{
                 id: movie.id,
                 title: movie.title,
                 img: `https://image.tmdb.org/t/p/original/${movie.backdrop_path}`,
+                release_date: movie.release_date,
+                genreIds: movie.genre_ids,
+                overview: movie.overview,
               }}
             />
           </SwiperSlide>
         ))}
       </Swiper>
-      {/* Thêm sự kiện vào các nút điều hướng */}
-      <div
-        onMouseEnter={handleOverlayMouseEnter}
-        ref={prevRef}
-        className="swiper-button-prev"
-      ></div>
-      <div
-        onMouseEnter={handleOverlayMouseEnter}
-        ref={nextRef}
-        className="swiper-button-next xl:hidden"
-      ></div>
+      <div ref={prevRef} className="swiper-button-prev max-sm:hidden"></div>
+      <div ref={nextRef} className="swiper-button-next max-sm:hidden"></div>
     </div>
   );
 };
