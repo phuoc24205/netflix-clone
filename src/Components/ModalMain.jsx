@@ -40,17 +40,17 @@ const ModalMain = () => {
 
   return (
     <div
-      className="modal animate-fadeIn fixed inset-0 z-[999] flex items-start justify-center overflow-y-auto bg-[rgba(0,0,0,0.7)] pt-[50px]"
+      className="modal animate-fadeIn overflow-hidde fixed inset-0 z-[999] overflow-y-auto bg-[rgba(0,0,0,0.7)] pt-[50px]"
       onClick={handleCloseModal}
     >
       <div
         ref={modalRef}
-        className="animate-slideUp z-[1000] flex w-full max-w-[900px] flex-col rounded-lg bg-black pb-[80px] text-yellow-100 max-sm:max-w-[450px] min-sm:mx-[100px]"
+        className="animate-slideUp relative left-[50%] z-[1000] w-full max-w-[900px] translate-x-[-50%] rounded-lg bg-black px-5 pb-[80px] text-yellow-100 max-sm:max-w-[450px]"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="relative">
+        <div className="verflow-hidden relative">
           <img
-            className="h-[400px] w-full object-cover"
+            className="h-[400px] w-full overflow-hidden rounded-lg object-cover"
             src={movie?.img}
             alt={movie?.title}
           />

@@ -29,11 +29,11 @@ const Row = ({ title, movies, isLoading, fetchMoreMovies }) => {
   return (
     <div className="filmSwiper relative mt-3 mb-13 overflow-visible pl-8 text-white">
       <h2 className="mb-2 font-bold">{title}</h2>
+      <div ref={prevRef} className="swiper-button-prev max-sm:hidden"></div>
       <Swiper
         modules={[Navigation, Pagination, Scrollbar, A11y]}
-        slidesPerView={5}
-        slidesPerGroup={5}
-        spaceBetween={10}
+        slidesPerView={"auto"}
+        spaceBetween={20}
         navigation={{
           prevEl: prevRef.current,
           nextEl: nextRef.current,
@@ -63,7 +63,6 @@ const Row = ({ title, movies, isLoading, fetchMoreMovies }) => {
           </SwiperSlide>
         ))}
       </Swiper>
-      <div ref={prevRef} className="swiper-button-prev max-sm:hidden"></div>
       <div ref={nextRef} className="swiper-button-next max-sm:hidden"></div>
     </div>
   );

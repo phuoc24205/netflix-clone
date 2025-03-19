@@ -1,19 +1,50 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { useMovie } from "../Context/MovieContext";
-import ModalMain from "./ModalMain";
 
 const ModalMovie = () => {
   const { hoveredMovie, setHoveredMovie, setIsModalShow, setMovie } =
     useMovie();
   const ref = useRef(null);
 
+  // Xác định điểm neo (transformOrigin) dựa trên vị trí left/right
+  const getTransformOrigin = () => {
+    const left = hoveredMovie?.left;
+    const right = hoveredMovie?.right;
+    // Nếu left là số (tức modal nằm giữa), lấy center center
+    if (typeof left === "string" && left.includes("%")) {
+      return "center center";
+    }
+    if (left === "auto") return "right center";
+    if (right === "auto") return "left center";
+
+    return "left center"; // Mặc định nếu không xác định được
+  };
+  const getPostion = () => {
+    if (hoveredMovie?.right) {
+      return hoveredMovie?.right;
+    }
+    return hoveredMovie?.left;
+  };
   // Animation Variants
+  console.log(getTransformOrigin());
   const modalVariants = {
-    hidden: { opacity: 0, scale: 0.5 },
-    visible: { opacity: 1, scale: 1 },
-    exit: { opacity: 0, scale: 0.5 },
+    hidden: {
+      scale: 0.85,
+      translateY: 0,
+      transformOrigin: getTransformOrigin(),
+    },
+    visible: {
+      scale: 1,
+      translateY: -60,
+      transformOrigin: getTransformOrigin(),
+    },
+    exit: {
+      scale: 0.85,
+      translateY: 0,
+      transformOrigin: getTransformOrigin(),
+    },
   };
 
   // Xử lý ẩn modal
@@ -25,19 +56,21 @@ const ModalMovie = () => {
     <AnimatePresence mode="wait">
       {hoveredMovie && (
         <motion.div
-          key={hoveredMovie.id} // 🚀 Đảm bảo mỗi movie có key riêng
+          key={hoveredMovie.id}
           variants={modalVariants}
           initial="hidden"
           animate="visible"
           exit="exit"
-          transition={{ duration: 0.3, ease: "easeOut" }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
           style={{
-            left: hoveredMovie?.left,
-            top: hoveredMovie?.top,
-            right: hoveredMovie?.right,
+            position: "absolute",
+            left: hoveredMovie.left,
+            right: hoveredMovie.right,
+            top: `${hoveredMovie.top}px`,
+            zIndex: 9999,
           }}
           onMouseLeave={handleLeave}
-          className="absolute z-[9999] w-[25%] overflow-hidden rounded-md bg-[#0d0d0e] pb-3 text-white"
+          className="absolute z-[9999] w-[25%] max-w-[25%] overflow-hidden rounded-md bg-[#0d0d0e] pb-3 text-white shadow-lg"
         >
           <img
             ref={ref}
@@ -48,9 +81,9 @@ const ModalMovie = () => {
           <div className="ms-2 flex w-full gap-2 pt-3 text-2xl">
             <i
               onClick={() => {
+                handleLeave();
                 setMovie(hoveredMovie);
                 setIsModalShow(true);
-                handleLeave();
               }}
               className="bi bi-play-fill cursor-pointer rounded-4xl border-2 border-gray-400 px-1"
             ></i>

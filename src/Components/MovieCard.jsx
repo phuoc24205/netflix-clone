@@ -7,46 +7,67 @@ const MovieCard = ({ movie, isLoading }) => {
   const { setHoveredMovie, setIsModalShow, setMovie } = useMovie();
   const timeoutRef = useRef(null);
 
-  const handleMouseEnter = useCallback((movie, event) => {
-    if (isMobile() || isLoading) return;
-    const rect = event.currentTarget.getBoundingClientRect();
+  const handleMouseEnter = useCallback(
+    (movie, event) => {
+      if (isMobile() || isLoading) return;
 
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-
-    timeoutRef.current = setTimeout(() => {
+      const rect = event.currentTarget.getBoundingClientRect();
       const viewportWidth = window.innerWidth;
-      let newLeft = rect.left + window.scrollX - 50;
-      let newRight = rect.right + window.scrollX - 150;
+      const modalWidthPercent = 25; // Modal rộng 25% màn hình
 
-      if (rect.left <= 35) {
-        newLeft = 0;
-        newRight = null;
-      } else if (rect.right > viewportWidth - 100) {
-        newRight = 0;
-        newLeft = null;
-      }
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
 
-      if (newLeft !== null || newRight !== null) {
+      timeoutRef.current = setTimeout(() => {
+        let newLeftPercent =
+          ((rect.left + rect.width / 2) / viewportWidth) * 100 -
+          modalWidthPercent / 2;
+        let newRightPercent = null;
+
+        // Nếu modal bị tràn lề phải
+        if (newLeftPercent + modalWidthPercent > 95) {
+          newRightPercent = 0;
+          newLeftPercent = null;
+        }
+
+        // Nếu modal bị tràn lề trái
+        else if (newLeftPercent < 5) {
+          newLeftPercent = 0;
+          newRightPercent = null;
+        }
+
         setHoveredMovie({
           ...movie,
-          top: rect.top + window.scrollY - 50,
-          left: newLeft,
-          right: newRight,
+          top: rect.top + window.scrollY - 30,
+          left:
+            newLeftPercent !== null
+              ? newLeftPercent === 0
+                ? rect.left
+                : `${newLeftPercent}%`
+              : "auto",
+          right:
+            newRightPercent !== null
+              ? newRightPercent === 0
+                ? 50
+                : `${newRightPercent}%`
+              : "auto",
+          width: rect.width,
+          height: rect.height,
           show: true,
         });
-      }
-    }, 500);
-  });
+      }, 300);
+    },
+    [setHoveredMovie, isLoading],
+  );
 
   const handleMouseLeave = useCallback(() => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-  });
+  }, []);
 
   const handleClick = useCallback(() => {
     if (!isMobile() || isLoading) return;
     setMovie(movie);
     setIsModalShow(true);
-  });
+  }, [isMobile, isLoading, setMovie, setIsModalShow, movie]);
 
   return (
     <div
@@ -55,11 +76,11 @@ const MovieCard = ({ movie, isLoading }) => {
       onMouseLeave={handleMouseLeave}
     >
       {isLoading ? (
-        <div className="h-[130px] w-auto animate-pulse rounded-lg bg-gray-700"></div>
+        <div className="h-[130px] w-auto min-w-[250px] animate-pulse rounded-lg bg-gray-700"></div>
       ) : (
         <img
           loading="lazy"
-          className="left-0 z-0 h-[130px] min-h-[130px] w-[250px] max-w-[250px] min-w-[250px] rounded-lg object-cover shadow-md"
+          className="left-0 z-0 h-full w-full rounded-lg object-cover shadow-md"
           src={movie.img}
           alt="Movie"
           sizes="(max-width: 600px) 480px, (max-width: 1024px) 768px, 1200px"

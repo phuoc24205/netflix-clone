@@ -11,7 +11,7 @@ const Home = () => {
   const renderMovieContent = () => {
     return Object.keys(moviesByGenre).map((genre) => (
       <Row
-        isLoading={isLoading}
+        isLoading={!moviesByGenre[genre]}
         key={genre}
         title={genre.toString()}
         movies={moviesByGenre[genre]}
