@@ -42,7 +42,7 @@ const useFetchMoviesByGenres = () => {
           loadMoreVideos();
         }
       },
-      { threshold: 0.1 },
+      { threshold: 0.05 },
     );
     const target = document.querySelector("#loading");
     if (target) observerRef.current.observe(target);
